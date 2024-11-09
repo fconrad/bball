@@ -157,7 +157,8 @@ $('#btn2').click(function() {
     const adjustedPassRate = ballHandler.passRate - defender.defenseRate;
 
     if (passChance > adjustedPassRate) {
-        game.turnover(); // The pass was intercepted or mishandled
+        game.announce(`${ballHandler.name}'s pass is intercepted by ${defender.name}!`);
+game.turnover();
     } else {
         makePass(passTo);
         updateClock();
@@ -170,7 +171,8 @@ $('#btn3').click(function() {
     const dribbleChance = Math.floor(Math.random() * 100) + 1;
 
     if (dribbleChance < (defender.defenseRate - ballHandler.dribbleRate + 50)) {
-        game.turnover(); // Defender steals the ball
+        game.announce(`${defender.name} steals the ball from ${ballHandler.name} during dribbling!`);
+game.turnover();
     } else {
         ballHandler.shoot(2);
     }
