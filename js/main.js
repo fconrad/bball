@@ -57,12 +57,23 @@ let game = new GameControl();
 
 // Player class to manage individual player attributes
 class Player {
-    constructor(name, jerseyNumber, position, shotRate, defenseRate) {
+    /**
+     * @param {string} name - The name of the player.
+     * @param {number} jerseyNumber - The jersey number of the player.
+     * @param {string} position - The position of the player (e.g., G, F, C).
+     * @param {number} shotRate - The shooting ability of the player (higher is better).
+     * @param {number} defenseRate - The defensive ability of the player (higher is better).
+     * @param {number} dribbleRate - The dribbling ability of the player (higher is better).
+     * @param {number} passRate - The passing ability of the player (higher is better).
+     */
+    constructor(name, jerseyNumber, position, shotRate, defenseRate, dribbleRate, passRate) {
         this.name = name;
         this.jerseyNumber = jerseyNumber;
         this.position = position;
         this.shotRate = shotRate;
         this.defenseRate = defenseRate;
+        this.dribbleRate = dribbleRate;
+        this.passRate = passRate;
         this.points = 0;
         this.fieldGoalsAttempted = 0;
         this.fieldGoalsMade = 0;
@@ -106,8 +117,10 @@ class Player {
     }
 }
 
-// Initialize players for both teams
+
 function initializePlayers() {
+// Initialize players for both teams
+// Parameters: name, jerseyNumber,position,shotRate,defenseRate,dribbleRate,passRate  
     players[HOME] = [
         new Player("Bill", 1, "G", 80, 1),
         new Player("Bob", 2, "G/F", 70, 2),
@@ -117,11 +130,11 @@ function initializePlayers() {
     ];
 
     players[VISITOR] = [
-        new Player("Timmy", 6, "G", 75, 2),
-        new Player("Tommy", 7, "G", 75, 2),
-        new Player("Jimmy", 8, "F", 60, -4),
-        new Player("Johnny", 9, "F/C", 65, -4),
-        new Player("Hobie", 10, "F/C", 50, -8)
+        new Player("Timmy", 6, "G", 75, 2, 70, 75),
+        new Player("Tommy", 7, "G", 75, 2, 65, 70),
+        new Player("Jimmy", 8, "F", 60, -4, 60, 65),
+        new Player("Johnny", 9, "F/C", 65, -4, 55, 60),
+        new Player("Hobie", 10, "F/C", 50, -8, 50, 55)
     ];
 }
 
@@ -138,10 +151,13 @@ $('#btn2').click(function() {
         passTo = Math.floor(Math.random() * 5);
     } while (passTo === game.currentBallHandler);
     
-    // Introduce a random chance of turnover
-    const turnoverChance = Math.floor(Math.random() * 100) + 1;
-    if (turnoverChance <= 15) { // 15% chance of turnover
-        game.turnover();
+    const ballHandler = players[game.possessionTeam][game.currentBallHandler];
+    const defender = players[game.defendingTeam][game.currentBallHandler];
+    const passChance = Math.floor(Math.random() * 100) + 1;
+    const adjustedPassRate = ballHandler.passRate - defender.defenseRate;
+
+    if (passChance > adjustedPassRate) {
+        game.turnover(); // The pass was intercepted or mishandled
     } else {
         makePass(passTo);
         updateClock();
@@ -149,7 +165,15 @@ $('#btn2').click(function() {
 });
 
 $('#btn3').click(function() {
-    players[game.possessionTeam][game.currentBallHandler].shoot(2);
+    const ballHandler = players[game.possessionTeam][game.currentBallHandler];
+    const defender = players[game.defendingTeam][game.currentBallHandler];
+    const dribbleChance = Math.floor(Math.random() * 100) + 1;
+
+    if (dribbleChance < (defender.defenseRate - ballHandler.dribbleRate + 50)) {
+        game.turnover(); // Defender steals the ball
+    } else {
+        ballHandler.shoot(2);
+    }
 });
 
 // Function to handle an inbound pass
