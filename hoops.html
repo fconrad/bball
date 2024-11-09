@@ -263,7 +263,10 @@
           <button id="nextPage" class="btn btn-secondary">Next</button>
         </div>
         <p>&copy; Company 2015</p>
-        <p id="fileInfo"></p>
+        <div id="fileInfoContainer">
+          <p id="fileInfoHtml">hoops.html Last Edit Date: Placeholder - Update via Server Script</p>
+          <p id="fileInfoJs">main.js Last Edit Date: Placeholder - Update via Server Script</p>
+        </div>
       </footer>
     </div>
 
@@ -273,11 +276,13 @@
     <script src="js/main.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        var fileInfoElement = document.getElementById('fileInfo');
-        if (fileInfoElement) {
+        var fileInfoHtmlElement = document.getElementById('fileInfoHtml');
+        var fileInfoJsElement = document.getElementById('fileInfoJs');
+        if (fileInfoHtmlElement && fileInfoJsElement) {
           // Note: This is a placeholder. JavaScript running on the client-side cannot access server file metadata directly.
           // You need a server-side script to get the last modified date of the file and then inject it here.
-          fileInfoElement.textContent = "Last Edit Date: Placeholder - Update via Server Script";
+          fileInfoHtmlElement.textContent = "hoops.html Last Edit Date: Placeholder - Update via Server Script";
+          fileInfoJsElement.textContent = "main.js Last Edit Date: Placeholder - Update via Server Script";
         }
       });
     </script>
