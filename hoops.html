@@ -253,21 +253,8 @@
       </div>
       <hr>
       <div class="container">
-
-      <!-- Announcements Section -->
-      <div class="row">
-        <div class="col-md-12">
-          <h3>Game Announcements</h3>
-          <div id="Announcer"></div>
-          <div id="paginationControls" class="text-center">
-            <button id="prevPage" class="btn btn-secondary">Previous</button>
-            <button id="nextPage" class="btn btn-secondary">Next</button>
-          </div>
-        </div>
-      </div>
-      
       <footer>
-        
+        <p id="Announcer"></p>
 
         <p>&copy; Company 2015</p>
       </footer>
@@ -276,45 +263,6 @@
 
         <script src="js/vendor/bootstrap.min.js"></script>
 
-        <script>
-          let announcements = [];
-          let currentPage = 0;
-          const pageSize = 5;
-
-          function updateAnnouncements() {
-            const start = currentPage * pageSize;
-            const end = start + pageSize;
-            const visibleAnnouncements = announcements.slice(start, end);
-            const announcerDiv = document.getElementById('Announcer');
-            announcerDiv.innerHTML = '';
-            visibleAnnouncements.forEach(announcement => {
-              const p = document.createElement('p');
-              p.innerHTML = announcement;
-              announcerDiv.appendChild(p);
-            });
-          }
-
-          function addAnnouncement(text) {
-            announcements.unshift(text); // Add to the beginning to show the latest first
-            updateAnnouncements();
-          }
-
-          document.getElementById('prevPage').addEventListener('click', () => {
-            if (currentPage > 0) {
-              currentPage--;
-              updateAnnouncements();
-            }
-          });
-
-          document.getElementById('nextPage').addEventListener('click', () => {
-            if ((currentPage + 1) * pageSize < announcements.length) {
-              currentPage++;
-              updateAnnouncements();
-            }
-          });
-
-          // Example usage: addAnnouncement('New game event!');
-        </script>
-        
+        <script src="js/main.js"></script>
     </body>
 </html>
