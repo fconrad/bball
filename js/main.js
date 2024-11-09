@@ -203,6 +203,10 @@ function Main() {
     $("#btn1").prop("disabled", false);
     $("#btn2").prop("disabled", true);
     $("#btn3").prop("disabled", true);
+
+    // Display file last edit dates - Note: These values are placeholders and need to be replaced by server-side logic.
+    $('#fileInfoHtml').text('hoops.html Last Edit Date: ' + 'Placeholder - Update via Server Script');
+    $('#fileInfoJs').text('main.js Last Edit Date: ' + 'Placeholder - Update via Server Script');
 }
 
 Main();
