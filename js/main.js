@@ -1,294 +1,207 @@
-var H =1; 
-var V =2;
+// Use constants for Home and Visitor teams for better readability
+const HOME = 1;
+const VISITOR = 2;
 
-var gbl_player = [];
-var timepassed = 0;
-gbl_player[H] = [];
-gbl_player[V] = [];
+// Global variables
+let players = { [HOME]: [], [VISITOR]: [] };
+let timePassed = 0;
 
+// Game control class to manage game state
+class GameControl {
+    constructor() {
+        this.possessionTeam = HOME;
+        this.defendingTeam = VISITOR;
+        this.homeScore = 0;
+        this.visitorScore = 0;
+        this.currentBallHandler = null;
+        this.previousBallHandler = null;
+    }
 
+    changePossession() {
+        // Clear current ball handler's possession
+        if (this.currentBallHandler !== null) {
+            players[this.possessionTeam][this.currentBallHandler].haveBall = false;
+        }
 
-function gamecontrol() {
-    this.poss_descr = "Home";
-    this.poss_nbr = 1
-    this.poss_nbr_def = 2;
-    this.homescore = 0;
-    this.visitorscore = 0;
-    this.current_ballhandler = 0;
-    this.previous_ballhandler = 1;
-};
+        // Swap possession
+        [this.possessionTeam, this.defendingTeam] = [this.defendingTeam, this.possessionTeam];
+        this.currentBallHandler = null;
+        this.previousBallHandler = null;
+        
+        this.updateScoreboard();
+        this.announce(`${this.getPossessionDescription()} team now has the ball.`);
+    }
 
-var game = new gamecontrol();
+    getPossessionDescription() {
+        return this.possessionTeam === HOME ? "Home" : "Visitor";
+    }
 
+    updateScoreboard() {
+        $('#Poss').text(`Poss: ${this.getPossessionDescription()}`);
+        $('#HomeScore').text(`Home: ${this.homeScore}`);
+        $('#VisitorScore').text(`Visitor: ${this.visitorScore}`);
+        updatePlayerBoard();
+    }
 
-function person(pname, jersey_nbr, position, shot_rate, def_rate, points) {
-    this.pname = pname;
-    this.jersey_nbr = jersey_nbr;
-    this.position = position;
-    this.haveball = "no";
-    this.shot_rate = shot_rate;
-    this.def_rate = def_rate;
-    this.points = 0;
-    this.fga = 0;
-    this.fgm = 0;
-    this.tpa = 0;
-    this.tpm = 0;
-    this.assists = 0;
-    this.rebounds = 0;
-    this.steals = 0;
-    this.blocks=0;
-};
+    announce(message) {
+        $("#Announcer").append(`<p>${message}</p>`);
+    }
+}
 
-person.prototype.shoot = function(shot_value) {
-	var shot_nbr = Math.floor((Math.random() * 100) + 1);
-	
-	var loc_def = gbl_player[game.poss_nbr_def][game.current_ballhandler].def_rate;
-	var loc_shot_rate = this.shot_rate - loc_def;
+let game = new GameControl();
 
+// Player class to manage individual player attributes
+class Player {
+    constructor(name, jerseyNumber, position, shotRate, defenseRate) {
+        this.name = name;
+        this.jerseyNumber = jerseyNumber;
+        this.position = position;
+        this.shotRate = shotRate;
+        this.defenseRate = defenseRate;
+        this.points = 0;
+        this.fieldGoalsAttempted = 0;
+        this.fieldGoalsMade = 0;
+        this.assists = 0;
+        this.rebounds = 0;
+        this.steals = 0;
+        this.blocks = 0;
+        this.haveBall = false;
+    }
 
+    shoot(shotValue) {
+        const shotChance = Math.floor(Math.random() * 100) + 1;
+        const defense = players[game.defendingTeam][game.currentBallHandler]?.defenseRate || 0;
+        const adjustedShotRate = this.shotRate - defense;
 
-	if (shot_nbr <= this.shot_rate) {
-		//make
-		var loc_announce = "<p>" + this.pname + " makes a " + shot_value + ".["+ shot_nbr +"] (" + loc_shot_rate + " = " + this.shot_rate + "-" + loc_def + ") </p>";
-		$( "#Announcer" ).append(loc_announce);
-		MakeBasket(shot_value);
+        if (shotChance <= adjustedShotRate) {
+            // Make the shot
+            game.announce(`${this.name} makes a ${shotValue}-point shot. [${shotChance}] (Shot Rate: ${adjustedShotRate})`);
+            this.makeBasket(shotValue);
+        } else {
+            // Miss the shot
+            game.announce(`${this.name} misses a ${shotValue}-point shot. [${shotChance}] (Shot Rate: ${adjustedShotRate})`);
+            this.fieldGoalsAttempted++;
+            game.changePossession();
+        }
+    }
 
-	} else { 
-		//miss
-		var loc_announce = "<p>" + this.pname + " misses a " + shot_value + ".["+ shot_nbr +"] (" + loc_shot_rate + " = " + this.shot_rate + "-" + loc_def + ") </p>";
-		$( "#Announcer" ).append(loc_announce);
-		
-		gbl_player[game.poss_nbr][game.current_ballhandler].fga += 1;
-		ChangePossession();
-	}
-};
+    makeBasket(points) {
+        this.points += points;
+        this.fieldGoalsMade++;
+        this.fieldGoalsAttempted++;
 
+        if (game.possessionTeam === HOME) {
+            game.homeScore += points;
+        } else {
+            game.visitorScore += points;
+        }
 
+        game.updateScoreboard();
+        game.changePossession();
+    }
+}
 
-gbl_player[H][1] = new person("Bill",1 ,"G", 80, 1)
-gbl_player[H][2] = new person("Bob",2,"G/F", 70, 2)
-gbl_player[H][3] = new person("Ben",3,"F", 65, 3)
-gbl_player[H][4] = new person("Brad",4,"F/C", 60, 4)
-gbl_player[H][5] = new person("Bjorn",5,"C", 75, 5)
+// Initialize players for both teams
+function initializePlayers() {
+    players[HOME] = [
+        new Player("Bill", 1, "G", 80, 1),
+        new Player("Bob", 2, "G/F", 70, 2),
+        new Player("Ben", 3, "F", 65, 3),
+        new Player("Brad", 4, "F/C", 60, 4),
+        new Player("Bjorn", 5, "C", 75, 5)
+    ];
 
-gbl_player[V][1] = new person("Timmy",6,"G", 75, 2)
-gbl_player[V][2] = new person("Tommy",7,"G", 75, 2)
-gbl_player[V][3] = new person("Jimmy",8,"F", 60, -4)
-gbl_player[V][4] = new person("Johnny",9,"F/C", 65, -4)
-gbl_player[V][5] = new person("Hobie",10,"F/C", 50, -8)
+    players[VISITOR] = [
+        new Player("Timmy", 6, "G", 75, 2),
+        new Player("Tommy", 7, "G", 75, 2),
+        new Player("Jimmy", 8, "F", 60, -4),
+        new Player("Johnny", 9, "F/C", 65, -4),
+        new Player("Hobie", 10, "F/C", 50, -8)
+    ];
+}
 
-
-$("#btn1").click(function(){
-
-
-	InboundPass(1);
-	$("#btn1").prop("disabled",true);
-	$("#btn2").prop("disabled",false);
-	$("#btn3").prop("disabled",false);
-
+// Event handlers for buttons
+$("#btn1").click(function() {
+    inboundPass(0);
+    $("#btn1").prop("disabled", true);
+    $("#btn2, #btn3").prop("disabled", false);
 });
 
-$('#btn2').click(function(){
-	//$( "#Announcer" ).append("<p>wrong button stupid</p>");
-
-	var pass_to;
-
-	//loop to ensure current ballhandler cant pass to himself.
-	do {
-		pass_to = Math.floor((Math.random() * 5) + 1);
-	} while (pass_to == game.current_ballhandler);
-
-	MakePass(pass_to);
-
-
-	UpdateClock();
-
-
+$('#btn2').click(function() {
+    let passTo;
+    do {
+        passTo = Math.floor(Math.random() * 5);
+    } while (passTo === game.currentBallHandler);
+    makePass(passTo);
+    updateClock();
 });
 
-$('#btn3').click(function(){
-	gbl_player[game.poss_nbr][game.current_ballhandler].shoot(2);
+$('#btn3').click(function() {
+    players[game.possessionTeam][game.currentBallHandler].shoot(2);
 });
 
-function MakePass(to_player) {
-	
-	var loc_announce = "<p>" + game.current_ballhandler + " passes to # " + to_player + "</p>";
-	$( "#Announcer" ).append(loc_announce);	
+// Function to handle an inbound pass
+function inboundPass(toPlayer) {
+    game.announce(`Inbound pass to #${players[game.possessionTeam][toPlayer].jerseyNumber}`);
+    game.previousBallHandler = null;
+    game.currentBallHandler = toPlayer;
+    players[game.possessionTeam][toPlayer].haveBall = true;
+    game.updateScoreboard();
+}
 
+// Function to handle making a pass
+function makePass(toPlayer) {
+    game.announce(`${players[game.possessionTeam][game.currentBallHandler].name} passes to #${players[game.possessionTeam][toPlayer].jerseyNumber}`);
 
-	//clear previous last ball handler 
-	if (game.previous_ballhandler != 0) {
-		gbl_player[game.poss_nbr][game.previous_ballhandler].haveball = "no";
-	}
+    // Clear possession from previous ball handler
+    if (game.currentBallHandler !== null) {
+        players[game.possessionTeam][game.currentBallHandler].haveBall = false;
+    }
 
-	//update new ball handler variables
-	game.previous_ballhandler = game.current_ballhandler;
-	game.current_ballhandler = to_player;
+    // Update possession
+    game.previousBallHandler = game.currentBallHandler;
+    game.currentBallHandler = toPlayer;
+    players[game.possessionTeam][toPlayer].haveBall = true;
 
-	//set the passer to be the previous ballhandler
-	gbl_player[game.poss_nbr][game.previous_ballhandler].haveball = "prev";
-	//update person object properties
-	gbl_player[game.poss_nbr][to_player].haveball = "yes";
+    game.updateScoreboard();
+}
 
-	UpdateScoreboard();
+// Function to update the player board UI
+function updatePlayerBoard() {
+    for (const team in players) {
+        const teamFlag = team === "1" ? "H" : "V";
+        players[team].forEach((player, index) => {
+            const idPrefix = `#${teamFlag}${index + 1}`;
+            $(idPrefix + "Name").text(player.name);
+            $(idPrefix + "Nbr").text(player.jerseyNumber);
+            $(idPrefix + "Pos").text(player.position);
+            $(idPrefix + "Shot").text(player.shotRate);
+            $(idPrefix + "Def").text(player.defenseRate);
+            $(idPrefix + "Fg").text(`${player.fieldGoalsMade}/${player.fieldGoalsAttempted}`);
+            $(idPrefix + "Ast").text(player.assists);
+            $(idPrefix + "Reb").text(player.rebounds);
+            $(idPrefix + "Blk").text(player.blocks);
+            $(idPrefix + "Steals").text(player.steals);
+            $(idPrefix + "Pts").text(player.points);
+            $(idPrefix + "Ball").text(player.haveBall ? "*" : "");
+        });
+    }
+}
 
+// Function to update the clock
+function updateClock() {
+    timePassed += 4;
+    const minutes = String(Math.floor(timePassed / 60)).padStart(2, '0');
+    const seconds = String(timePassed % 60).padStart(2, '0');
+    $('#TheClock').text(`${minutes}:${seconds}`);
+}
 
-};
+// Main function to initialize the game
+function main() {
+    initializePlayers();
+    game.updateScoreboard();
+    $("#btn1").prop("disabled", false);
+    $("#btn2, #btn3").prop("disabled", true);
+}
 
-
-function InboundPass(to_player) {
-	var loc_announce = "<p>Inbound pass to # " + to_player + "</p>";
-	$( "#Announcer" ).append(loc_announce);	
-
-	//update game object properties
-	game.previous_ballhandler = game.current_ballhandler;
-	game.current_ballhandler = to_player;
-	
-	//update person object properties
-	gbl_player[game.poss_nbr][to_player].haveball = "yes";
-
-	UpdateScoreboard();
-
-
-};
-
-function MakeBasket(loc_value) {
-	
-	//give credit to scoring player
-	gbl_player[game.poss_nbr][game.current_ballhandler].points += loc_value;
-	gbl_player[game.poss_nbr][game.current_ballhandler].fgm += 1;
-	gbl_player[game.poss_nbr][game.current_ballhandler].fga += 1;
-
-	//give credit to assisting passer
-	//add code here
-
-	//give credit to scoring team 
-	if (game.poss_descr == "Home") { //if home team scores
-		game.homescore += loc_value;
-	} else {   // if visitor scores
-		game.visitorscore += loc_value;
-		}
-
-	UpdateScoreboard();
-	ChangePossession();
-
-};
-
-function ChangePossession() {
-	//clear ballhandler variables
-	gbl_player[game.poss_nbr][game.current_ballhandler].haveball = "no";
-	if (game.previous_ballhandler != 0) {
-		gbl_player[game.poss_nbr][game.previous_ballhandler].haveball = "no";
-	}
-	game.current_ballhandler = 0;
-	game.previous_ballhandler = 0;
-
-
-	if (game.poss_descr == "Home") {
-		//set offensive possession to be vistor team and home team is on defense
-		game.poss_descr = "Visitor";
-		game.poss_nbr = 2;
-		game.poss_nbr_def = 1;
-	} else {   //if visitor
-		//set offensive possession to be home team and visitors are on defense
-		game.poss_descr = "Home"
-		game.poss_nbr = 1;
-		game.poss_nbr_def = 2;
-	}
-
-	UpdateScoreboard();
-	//announce possesion
-	var loc_announce = "<p>" + game.poss_descr + " team now has the ball.</p>"
-	$( "#Announcer" ).append(loc_announce);
-
-	//set buttons for initial pass only
-	$("#btn1").prop("disabled",false);
-	$("#btn2").prop("disabled",true);
-	$("#btn3").prop("disabled",true);	
-
-};
-
-
-function UpdateScoreboard() {
-	$('#Poss').text("Poss: " + game.poss_descr);
-	$('#HomeScore').text("Home: " + game.homescore);
-	$('#VisitorScore').text("Visitor: " + game.visitorscore);
-	UpdatePlayerBoard();
-};
-
-
-function UpdatePlayerBoard() {
-	for (i = 1; i<=2; i++){
-		var loc_flag;
-		if (i == 1) {
-			loc_flag = "H";
-		} else {
-			loc_flag = "V";
-		}
-		for (j=1; j<=5; j++){
-					var idname = "#" + loc_flag + j + "Name"
-					var str_ball = "";
-					//alert(gbl_player[i][j].def_rate)
-					if (gbl_player[i][j].haveball == "yes") {
-						//have ball
-						str_ball = "*";
-					} else if (gbl_player[i][j].haveball == "no") { 
-						// doesnt have ball
-						str_ball = "";
-					} else if (gbl_player[i][j].haveball == "prev") { 
-						// last to touch
-						str_ball = "-";
-					}
-					$("#" + loc_flag + j + "Ball").text(str_ball);
-					$("#" + loc_flag + j + "Name").text(gbl_player[i][j].pname);
-					$("#" + loc_flag + j + "Nbr").text(gbl_player[i][j].jersey_nbr);
-					$("#" + loc_flag + j + "Pos").text(gbl_player[i][j].position);
-					$("#" + loc_flag + j + "Shot").text(gbl_player[i][j].shot_rate);
-					$("#" + loc_flag + j + "Def").text(gbl_player[i][j].def_rate);
-					$("#" + loc_flag + j + "Fg").text(gbl_player[i][j].fgm + "/" + gbl_player[i][j].fga);
-					$("#" + loc_flag + j + "Tp").text(gbl_player[i][j].tpm + "/" + gbl_player[i][j].tpa);
-					$("#" + loc_flag + j + "Ast").text(gbl_player[i][j].assists);
-					$("#" + loc_flag + j + "Reb").text(gbl_player[i][j].rebounds);
-					$("#" + loc_flag + j + "Blk").text(gbl_player[i][j].blocks);
-					$("#" + loc_flag + j + "Steals").text(gbl_player[i][j].steals);
-					$("#" + loc_flag + j + "Pts").text(gbl_player[i][j].points);
-		}
-		
-	}
-};	
-
-function UpdateClock() {
-	timepassed += 4;
-	var loc_minutes = Math.floor(timepassed /60);
-	var loc_seconds = timepassed - (loc_minutes * 60)
-
-	if (loc_minutes == 0 ) {
-		loc_minutes = "00";
-	}
-	if (loc_seconds == 0 ) {
-		loc_seconds = "00";
-	}
-	if (loc_seconds == 4 ) {
-		loc_seconds = "04";
-	}
-	if (loc_seconds == 8 ) {
-		loc_seconds = "08";
-	}
-
-	$('#TheClock').text(loc_minutes + ":" + loc_seconds);
-
-
-
-};
-	
-
-
-function Main() {
-	UpdateScoreboard();
-	$("#btn1").prop("disabled",false);
-	$("#btn2").prop("disabled",true);
-	$("#btn3").prop("disabled",true);
-
-};
-
-Main();
+$(document).ready(main);
