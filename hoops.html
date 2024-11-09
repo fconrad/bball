@@ -51,18 +51,99 @@
       </div>
     </nav>
 
-    <!-- Main content section -->
-    <div class="jumbotron text-center">
-      <div class="container">
-        <p id="TheClock" class="lead"></p>
-        <p id="Poss" class="lead">Possession:</p>
-        <p id="HomeScore" class="lead">Home Score:</p>
-        <p id="VisitorScore" class="lead">Visitor Score:</p>
-        <div class="btn-group" role="group" aria-label="Game Controls">
-          <button class="btn btn-primary btn-lg" id="btn1">Inbound Pass</button>
-          <button class="btn btn-primary btn-lg" id="btn2">Make Pass</button>
-          <button class="btn btn-primary btn-lg" id="btn3">Shoot 2-Point Shot</button>
-          <button class="btn btn-primary btn-lg" id="btn4">Shoot 3-Point Shot</button>
+    
+      <!-- Team Stats Section -->
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Home Team</h3>
+          <table class="table table-striped table-condensed">
+            <thead>
+              <tr>
+                <th> </th>
+                <th>Name</th>
+                <th>#</th>
+                <th>Pos</th>
+                <th>Shot</th>
+                <th>Def</th>
+                <th>FG</th>
+                <th>3s</th>
+                <th>Ast</th>
+                <th>Reb</th>
+                <th>Blk</th>
+                <th>Stl</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Player rows for Home Team -->
+              <tr id="HomePlayer1">
+                <td id="H1Ball"></td>
+                <td id="H1Name"></td>
+                <td id="H1Nbr"></td>
+                <td id="H1Pos"></td>
+                <td id="H1Shot"></td>
+                <td id="H1Def"></td>
+                <td id="H1Fg"></td>
+                <td id="H1Tp"></td>
+                <td id="H1Ast"></td>
+                <td id="H1Reb"></td>
+                <td id="H1Blk"></td>
+                <td id="H1Steals"></td>
+                <td id="H1Pts"></td>
+              </tr>
+              <!-- Add HomePlayer2 to HomePlayer5 similarly -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col-md-6">
+          <h3>Visitor Team</h3>
+          <table class="table table-striped table-condensed">
+            <thead>
+              <tr>
+                <th> </th>
+                <th>Name</th>
+                <th>#</th>
+                <th>Pos</th>
+                <th>Shot</th>
+                <th>Def</th>
+                <th>FG</th>
+                <th>3s</th>
+                <th>Ast</th>
+                <th>Reb</th>
+                <th>Blk</th>
+                <th>Stl</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Player rows for Visitor Team -->
+              <tr id="VisitorPlayer1">
+                <td id="V1Ball"></td>
+                <td id="V1Name"></td>
+                <td id="V1Nbr"></td>
+                <td id="V1Pos"></td>
+                <td id="V1Shot"></td>
+                <td id="V1Def"></td>
+                <td id="V1Fg"></td>
+                <td id="V1Tp"></td>
+                <td id="V1Ast"></td>
+                <td id="V1Reb"></td>
+                <td id="V1Blk"></td>
+                <td id="V1Steals"></td>
+                <td id="V1Pts"></td>
+              </tr>
+              <!-- Add VisitorPlayer2 to VisitorPlayer5 similarly -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Announcements Section -->
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Game Announcements</h3>
+          <div id="Announcer"></div>
         </div>
       </div>
     </div>
