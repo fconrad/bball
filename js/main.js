@@ -18,6 +18,10 @@ function updateAnnouncements() {
         p.innerHTML = announcement;
         announcerDiv.appendChild(p);
     });
+
+    // Enable or disable pagination buttons based on current page
+    document.getElementById('prevPage').disabled = currentPage === 0;
+    document.getElementById('nextPage').disabled = (currentPage + 1) * pageSize >= announcements.length;
 }
 
 // Function to add a new announcement
