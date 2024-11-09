@@ -44,7 +44,7 @@ class GameControl {
     }
 
     announce(message) {
-        $("#Announcer").prepend(`<p>${message}</p>`);
+        $("#Announcer").prepend(`<p>Fart ${message}</p>`);
     }
 }
 
