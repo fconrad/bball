@@ -49,7 +49,14 @@ document.getElementById('nextPage').addEventListener('click', () => {
 function updateTeamTables(players, teamIdPrefix) {
     players.forEach((player, index) => {
         const playerIndex = index + 1;
-        document.getElementById(`${teamIdPrefix}${playerIndex}Name`).innerText = player.name;
+        console.log(`Updating ${teamIdPrefix}${playerIndex} with player ${player.name}`); // Debug statement
+
+        const nameElement = document.getElementById(`${teamIdPrefix}${playerIndex}Name`);
+        if (!nameElement) {
+            console.error(`Element with ID ${teamIdPrefix}${playerIndex}Name not found.`);
+            return;
+        }
+        nameElement.innerText = player.name;
         document.getElementById(`${teamIdPrefix}${playerIndex}Nbr`).innerText = player.jerseyNumber;
         document.getElementById(`${teamIdPrefix}${playerIndex}Pos`).innerText = player.position;
         document.getElementById(`${teamIdPrefix}${playerIndex}Shot`).innerText = player.shotRate;
