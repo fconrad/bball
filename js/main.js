@@ -129,7 +129,7 @@ function initializePlayers() {
 $("#btn1").click(function() {
     inboundPass(0);
     $("#btn1").prop("disabled", true);
-    $("#btn2, #btn3, #btn4").prop("disabled", false);
+    $("#btn2, #btn3").prop("disabled", false);
 });
 
 $('#btn2').click(function() {
@@ -137,16 +137,19 @@ $('#btn2').click(function() {
     do {
         passTo = Math.floor(Math.random() * 5);
     } while (passTo === game.currentBallHandler);
-    makePass(passTo);
-    updateClock();
+    
+    // Introduce a random chance of turnover
+    const turnoverChance = Math.floor(Math.random() * 100) + 1;
+    if (turnoverChance <= 15) { // 15% chance of turnover
+        game.turnover();
+    } else {
+        makePass(passTo);
+        updateClock();
+    }
 });
 
 $('#btn3').click(function() {
     players[game.possessionTeam][game.currentBallHandler].shoot(2);
-});
-
-$('#btn4').click(function() {
-    game.turnover();
 });
 
 // Function to handle an inbound pass
@@ -210,7 +213,7 @@ function main() {
     initializePlayers();
     game.updateScoreboard();
     $("#btn1").prop("disabled", false);
-    $("#btn2, #btn3, #btn4").prop("disabled", true);
+    $("#btn2, #btn3").prop("disabled", true);
 }
 
 $(document).ready(main);
