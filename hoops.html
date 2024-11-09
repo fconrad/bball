@@ -1,29 +1,39 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+<html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Hoops Game</title>
+        <meta name="description" content="Basketball game simulation interface">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
         <style>
             body {
                 padding-top: 50px;
                 padding-bottom: 20px;
             }
+            #Announcer {
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 20px;
+            }
+            .turnover {
+                color: red;
+            }
+            .success {
+                color: green;
+            }
         </style>
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="css/main.css">
 
+        <!-- Modernizr -->
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
     </head>
     <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -32,289 +42,134 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Hoops Game</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
+        <div id="navbar" class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="form">
           </form>
-        </div><!--/.navbar-collapse -->
+        </div>
       </div>
     </nav>
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <p id="TheClock"></p>
-        <p id="Poss">Poss:</p>
-        <p id="HomeScore">Home:</p>
-        <p id="VisitorScore">Visitor:</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button" id="btn1">Initial</a>
-        <a class="btn btn-primary btn-lg" href="#" role="button" id="btn2">Pass</a>
-        <a class="btn btn-primary btn-lg" href="#" role="button" id="btn3">S2</a>
-
-      </div>
-    </div>
-
-    <div class="container">
-          <!-- Example row of columns -->
+    
+      <!-- Team Stats Section -->
       <div class="row">
         <div class="col-md-6">
-          <h3>Home</h3>
-          <table class="table table-striped table-condensed" id="test">
-            <tr>
-              <th> </th>
-              <th>Name</th>
-              <th>#</th>
-              <th>Pos</th>
-              <th>Shot</th>
-              <th>Def</th>
-              <th>FG</th>
-              <th>3s</th>
-              <th>Ast</th>
-              <th>Reb</th>
-              <th>Blk</th>
-              <th>S</th>
-              <th>Pts</th>
-            </tr>
-            <tr id="HomePlayer1">
-              <td id="H1Ball"></td>
-              <td id="H1Name"></td>
-              <td id="H1Nbr"></td>
-              <td id="H1Pos"></td>
-              <td id="H1Shot"></td>
-              <td id="H1Def"></td>
-              <td id="H1Fg"></td>
-              <td id="H1Tp"></td>
-              <td id="H1Ast"></td>
-              <td id="H1Reb"></td>
-              <td id="H1Blk"></td>
-              <td id="H1Steals"></td>
-              <td id="H1Pts"></td>
-            </tr>
-            <tr id="HomePlayer2">
-              <td id="H2Ball"></td>
-              <td id="H2Name"></td>
-              <td id="H2Nbr"></td>
-              <td id="H2Pos"></td>
-              <td id="H2Shot"></td>
-              <td id="H2Def"></td>
-              <td id="H2Fg"></td>
-              <td id="H2Tp"></td>
-              <td id="H2Ast"></td>
-              <td id="H2Reb"></td>
-              <td id="H2Blk"></td>
-              <td id="H2Steals"></td>
-              <td id="H2Pts"></td>
-            </tr>
-            <tr id="HomePlayer3">
-              <td id="H3Ball"></td>
-              <td id="H3Name"></td>
-              <td id="H3Nbr"></td>
-              <td id="H3Pos"></td>
-              <td id="H3Shot"></td>
-              <td id="H3Def"></td>
-              <td id="H3Fg"></td>
-              <td id="H3Tp"></td>
-              <td id="H3Ast"></td>
-              <td id="H3Reb"></td>
-              <td id="H3Blk"></td>
-              <td id="H3Steals"></td>
-              <td id="H3Pts"></td>
-            </tr>
-            <tr id="HomePlayer4">
-              <td id="H4Ball"></td>
-              <td id="H4Name"></td>
-              <td id="H4Nbr"></td>
-              <td id="H4Pos"></td>
-              <td id="H4Shot"></td>
-              <td id="H4Def"></td>
-              <td id="H4Fg"></td>
-              <td id="H4Tp"></td>
-              <td id="H4Ast"></td>
-              <td id="H4Reb"></td>
-              <td id="H4Blk"></td>
-              <td id="H4Steals"></td>
-              <td id="H4Pts"></td>
-            </tr>
-            <tr id="HomePlayer5">
-              <td id="H5Ball"></td>
-              <td id="H5Name"></td>
-              <td id="H5Nbr"></td>
-              <td id="H5Pos"></td>
-              <td id="H5Shot"></td>
-              <td id="H5Def"></td>
-              <td id="H5Fg"></td>
-              <td id="H5Tp"></td>
-              <td id="H5Ast"></td>
-              <td id="H5Reb"></td>
-              <td id="H5Blk"></td>
-              <td id="H5Steals"></td>
-              <td id="H5Pts"></td>
-            </tr>                        
+          <h3>Home Team</h3>
+          <table class="table table-striped table-condensed">
+            <thead>
+              <tr>
+                <th> </th>
+                <th>Name</th>
+                <th>#</th>
+                <th>Pos</th>
+                <th>Shot</th>
+                <th>Def</th>
+                <th>FG</th>
+                <th>3s</th>
+                <th>Ast</th>
+                <th>Reb</th>
+                <th>Blk</th>
+                <th>Stl</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Player rows for Home Team -->
+              <tr id="HomePlayer1">
+                <td id="H1Ball"></td>
+                <td id="H1Name"></td>
+                <td id="H1Nbr"></td>
+                <td id="H1Pos"></td>
+                <td id="H1Shot"></td>
+                <td id="H1Def"></td>
+                <td id="H1Fg"></td>
+                <td id="H1Tp"></td>
+                <td id="H1Ast"></td>
+                <td id="H1Reb"></td>
+                <td id="H1Blk"></td>
+                <td id="H1Steals"></td>
+                <td id="H1Pts"></td>
+              </tr>
+              <!-- Add HomePlayer2 to HomePlayer5 similarly -->
+            </tbody>
           </table>
         </div>
-        <div class="col-md-6">
-          <h3>Visitors</h3>
-          <table class="table table-striped table-condensed" id="test">
-            <tr>
-              <th> </th>
-              <th>Name</th>
-              <th>#</th>
-              <th>Pos</th>
-              <th>Shot</th>
-              <th>Def</th>
-              <th>FG</th>
-              <th>3s</th>
-              <th>Ast</th>
-              <th>Reb</th>
-              <th>Blk</th>
-              <th>Stl</th>
-              <th>Pts</th>
-            </tr>
-            <tr id="VisitorPlayer1">
-              <td id="V1Ball"></td>
-              <td id="V1Name"></td>
-              <td id="V1Nbr"></td>
-              <td id="V1Pos"></td>
-              <td id="V1Shot"></td>
-              <td id="V1Def"></td>
-              <td id="V1Fg"></td>
-              <td id="V1Tp"></td>
-              <td id="V1Ast"></td>
-              <td id="V1Reb"></td>
-              <td id="V1Blk"></td>
-              <td id="V1Steals"></td>
-              <td id="V1Pts"></td>
-            </tr>
-            <tr id="VisitorPlayer2">
-              <td id="V2Ball"></td>
-              <td id="V2Name"></td>
-              <td id="V2Nbr"></td>
-              <td id="V2Pos"></td>
-              <td id="V2Shot"></td>
-              <td id="V2Def"></td>
-              <td id="V2Fg"></td>
-              <td id="V2Tp"></td>
-              <td id="V2Ast"></td>
-              <td id="V2Reb"></td>
-              <td id="V2Blk"></td>
-              <td id="V2Steals"></td>
-              <td id="V2Pts"></td>
-            </tr>
-            <tr id="VisitorPlayer3">
-              <td id="V3Ball"></td>
-              <td id="V3Name"></td>
-              <td id="V3Nbr"></td>
-              <td id="V3Pos"></td>
-              <td id="V3Shot"></td>
-              <td id="V3Def"></td>
-              <td id="V3Fg"></td>
-              <td id="V3Tp"></td>
-              <td id="V3Ast"></td>
-              <td id="V3Reb"></td>
-              <td id="V3Blk"></td>
-              <td id="V3Steals"></td>
-              <td id="V3Pts"></td>
-            </tr>
-            <tr id="VisitorPlayer4">
-              <td id="V4Ball"></td>
-              <td id="V4Name"></td>
-              <td id="V4Nbr"></td>
-              <td id="V4Pos"></td>
-              <td id="V4Shot"></td>
-              <td id="V4Def"></td>
-              <td id="V4Fg"></td>
-              <td id="V4Tp"></td>
-              <td id="V4Ast"></td>
-              <td id="V4Reb"></td>
-              <td id="V4Blk"></td>
-              <td id="V4Steals"></td>
-              <td id="V4Pts"></td>
-            </tr>
-            <tr id="VisitorPlayer5">
-              <td id="V5Ball"></td>
-              <td id="V5Name"></td>
-              <td id="V5Nbr"></td>
-              <td id="V5Pos"></td>
-              <td id="V5Shot"></td>
-              <td id="V5Def"></td>
-              <td id="V5Fg"></td>
-              <td id="V5Tp"></td>
-              <td id="V5Ast"></td>
-              <td id="V5Reb"></td>
-              <td id="V5Blk"></td>
-              <td id="V5Steals"></td>
-              <td id="V5Pts"></td>
-            </tr>                        
-          </table>
-       </div>
-      </div>
 
+        <div class="col-md-6">
+          <h3>Visitor Team</h3>
+          <table class="table table-striped table-condensed">
+            <thead>
+              <tr>
+                <th> </th>
+                <th>Name</th>
+                <th>#</th>
+                <th>Pos</th>
+                <th>Shot</th>
+                <th>Def</th>
+                <th>FG</th>
+                <th>3s</th>
+                <th>Ast</th>
+                <th>Reb</th>
+                <th>Blk</th>
+                <th>Stl</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Player rows for Visitor Team -->
+              <tr id="VisitorPlayer1">
+                <td id="V1Ball"></td>
+                <td id="V1Name"></td>
+                <td id="V1Nbr"></td>
+                <td id="V1Pos"></td>
+                <td id="V1Shot"></td>
+                <td id="V1Def"></td>
+                <td id="V1Fg"></td>
+                <td id="V1Tp"></td>
+                <td id="V1Ast"></td>
+                <td id="V1Reb"></td>
+                <td id="V1Blk"></td>
+                <td id="V1Steals"></td>
+                <td id="V1Pts"></td>
+              </tr>
+              <!-- Add VisitorPlayer2 to VisitorPlayer5 similarly -->
+            </tbody>
+          </table>
+        </div>
       </div>
-      <hr>
-      <div class="container">
 
       <!-- Announcements Section -->
       <div class="row">
         <div class="col-md-12">
           <h3>Game Announcements</h3>
           <div id="Announcer"></div>
-          <div id="paginationControls" class="text-center">
-            <button id="prevPage" class="btn btn-secondary">Previous</button>
-            <button id="nextPage" class="btn btn-secondary">Next</button>
-          </div>
         </div>
       </div>
+    </div>
+
+    <div class="container">
       
+      
+      <!-- Announcements Section -->
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Game Announcements</h3>
+          <div id="Announcer"></div>
+        </div>
+      </div>
+      </div>
+      
+      <hr>
       <footer>
-        
-
-        <p>&copy; Company 2015</p>
+        <p class="text-center">&copy; Company 2015</p>
       </footer>
-    </div> <!-- /container -->        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+    </div> <!-- /container -->        
 
-        <script src="js/vendor/bootstrap.min.js"></script>
-
-        <script>
-          let announcements = [];
-          let currentPage = 0;
-          const pageSize = 5;
-
-          function updateAnnouncements() {
-            const start = currentPage * pageSize;
-            const end = start + pageSize;
-            const visibleAnnouncements = announcements.slice(start, end);
-            const announcerDiv = document.getElementById('Announcer');
-            announcerDiv.innerHTML = '';
-            visibleAnnouncements.forEach(announcement => {
-              const p = document.createElement('p');
-              p.innerHTML = announcement;
-              announcerDiv.appendChild(p);
-            });
-          }
-
-          function addAnnouncement(text) {
-            announcements.unshift(text); // Add to the beginning to show the latest first
-            updateAnnouncements();
-          }
-
-          document.getElementById('prevPage').addEventListener('click', () => {
-            if (currentPage > 0) {
-              currentPage--;
-              updateAnnouncements();
-            }
-          });
-
-          document.getElementById('nextPage').addEventListener('click', () => {
-            if ((currentPage + 1) * pageSize < announcements.length) {
-              currentPage++;
-              updateAnnouncements();
-            }
-          });
-
-          // Example usage: addAnnouncement('New game event!');
-        </script>
-        
+    <!-- Scripts -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
     </body>
 </html>
